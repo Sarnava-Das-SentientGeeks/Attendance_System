@@ -1,8 +1,85 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Attendance Entry";
 }
+
+<h2>Attendance Entry</h2>
+<form method="post">
+    <input type="hidden" asp-for="Attendance.ID"/>
+
+    <div class="form-group">
+        <lable for="SName">Student Name</lable>
+        <input asp-for="Attendance.StudentName" class="form-control"/>
+    </div>
+
+    <div class="form-group">
+        <label>Date</label>
+        <input asp-for="Attendance.Date" type="date" class="form-control"/>
+    </div>
+
+    <div class="form-check">
+        <input asp-for="Attendance.IsPresent" class="form-check-input"/>
+        <label class="form-check-label">Present</label>
+    </div>
+    <br/>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<hr />
+
+<button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#a">
+    View Records
+</button>
+
+<!--Modal-->
+<div class="modal fade" id="attendanceModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Attendance Records</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.AttendanceList)
+                        {
+                            <tr>
+                                <td>@item.StudentName</td>
+                                <td>@item.Date.ToShortDateString()</td>
+                                <td>@(item.IsPresent ? "Present":"Absent")</td>
+                                <td>
+                                    <form method="post" asp-page-handler="Edit" style="display:inline">
+                                        <input type="hidden" name="id" value="@item.Id"/>
+                                        <button class="btn btn-outline-warning btn-sm">Edit</button>
+                                    </form>
+                                    <form method="post" asp-page-handler="Delete" style="display:inline;">
+                                        <input type="hidden" name="id" value="@item.Id"/>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this record?')"> 
+                                            @* <span class="spinner-border spinner-border-sm"></span>  *@
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>

@@ -1,7 +1,11 @@
+using WebApplication1.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+//Add Database Service
+builder.Services.AddDbContext<ApplicationDbContext> (options) => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
